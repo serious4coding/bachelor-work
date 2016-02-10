@@ -1,0 +1,23 @@
+#MACD manuell berechnet
+
+SP500 <- read.table("~/Dropbox/Uni/BachelorArbeit/Data/SP500.csv", sep = ";", header = TRUE)
+DAX <- read.table("~/Dropbox/Uni/BachelorArbeit/Data/DAX.csv", sep = ";", header = TRUE)
+NIKKEI <- read.table("~/Dropbox/Uni/BachelorArbeit/Data/NIKKEI225.csv", sep = ";", header = TRUE)
+
+index <- DAX
+
+x <- 12
+y <- 26
+z <- 9
+
+EMAx = EMA(index[,7], n = x)
+EMAy = EMA(index[,7], n = y)
+EMAz = EMA(MACDt, n = z)
+
+EMA1 = lag(EMAx, 1) + (2/(x+1)) * (index[,7]-lag(EMAx, 1))
+
+EMA2 = lag(EMAy, 1) + (2/(y+1)) * (index[,7]-lag(EMAy, 1))
+
+MACDt = EMA1 - EMA2
+
+Trigger = lag(EMAz, 1) + (2/(z + 1)) * (MACDt-lag(EMAz, 1))
