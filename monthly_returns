@@ -1,0 +1,23 @@
+#monthly_Returns
+
+SP500 <- read.table("~/Dropbox/Uni/BachelorArbeit/Data/SP500.csv", sep = ";", header = TRUE)
+DAX <- read.table("~/Dropbox/Uni/BachelorArbeit/Data/DAX.csv", sep = ";", header = TRUE)
+NIKKEI <- read.table("~/Dropbox/Uni/BachelorArbeit/Data/NIKKEI225.csv", sep = ";", header = TRUE)
+
+SP500 <- xts(SP500[,6], order.by=as.Date(SP500[,1]))
+DAX <- xts(DAX[,6], order.by=as.Date(DAX[,1]))
+NIKKEI <- xts(NIKKEI[,6], order.by=as.Date(NIKKEI[,1]))
+
+SP500_monthly <- as.xts(apply.monthly(SP500, tail, 1))
+DAX_monthly <- as.xts(apply.monthly(DAX, tail, 1))
+NIKKEI_monthly <- as.xts(apply.monthly(NIKKEI, tail, 1))
+
+SP500_monthly <- na.locf.xts(SP500_monthly)
+SP500_monthly <- SP500_monthly[, colSums(is.na(SP500_monthly)) == 0]
+
+DAX_monthly <- na.locf.xts(DAX_monthly)
+DAX_monthly <- DAX_monthly[, colSums(is.na(DAX_monthly)) == 0]
+
+NIKKEI_monthly <- na.locf.xts(NIKKEI_monthly)
+NIKKEI_monthly <- NIKKEI_monthly[, colSums(is.na(NIKKEI_monthly)) == 0]
+
