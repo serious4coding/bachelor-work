@@ -1,0 +1,22 @@
+library(zoo)
+library(xts)
+library(tseries)
+
+
+#define dates
+
+StartDate <- "2003-01-01"
+EndDate <-  "2014-12-31"
+
+
+
+#get quotes
+x <- get.hist.quote(instrument = "^GSPC", start = StartDate, end = EndDate, quote = c("Open", "High", "Low", "Close", "Adj", "Volume"), provider = "yahoo", retclass = "zoo", quiet=T)
+y <- get.hist.quote(instrument = "^GDAXI", start = StartDate, end = EndDate, quote = c("Open", "High", "Low", "Close", "Adj", "Volume"), provider = "yahoo", retclass = "zoo", quiet=T)
+z <- get.hist.quote(instrument = "^N225", start = StartDate, end = EndDate, quote = c("Open", "High", "Low", "Close", "Adj", "Volume"), provider = "yahoo", retclass = "zoo", quiet=T)
+
+
+write.zoo(x, file="SP500.csv", sep=";", dec=",")
+write.zoo(y, file="DAX.csv", sep=";", dec=",")
+write.zoo(z, file="NIKKEI225.csv", sep=";", dec=",")
+
