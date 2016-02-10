@@ -34,4 +34,5 @@ AverageTrueRange <- function(HLC, n = 14, maType, ...)
 atr <- AverageTrueRange(index, n=14, maType = "EMA")
 
 
-RWIHigh = (index[,])
+RWIHigh = (index[,3] - atr["trueLow"])/(atr * n^0.5)
+RWILow = (atr["trueHigh"] - index[,4])/(atr * n^0.5)
