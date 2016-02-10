@@ -1,0 +1,26 @@
+#Bollinger Bänder (manuell)
+
+SP500 <- read.table("~/Dropbox/Uni/BachelorArbeit/Data/SP500.csv", sep = ";", header = TRUE)
+DAX <- read.table("~/Dropbox/Uni/BachelorArbeit/Data/DAX.csv", sep = ";", header = TRUE)
+NIKKEI <- read.table("~/Dropbox/Uni/BachelorArbeit/Data/NIKKEI225.csv", sep = ";", header = TRUE)
+
+index <- xts(DAX[,3:5], order.by=as.Date(DAX[,1]))
+
+n <- 20
+sd <- 2
+
+
+BollingerBänder <- function(index, n = n, sd = sd) {
+    HLC <- apply(index, 1, mean)
+
+mavg <- EMA(HLC, n = n, wilder = TRUE, ratio = NULL )
+sdev <- runSD(HLC, n, sample = FALSE)
+up <- mavg + sd * sdev
+dn <- mavg - sd * sdev
+pctB <- (HLC - dn)/(up - dn)
+res <- cbind(dn, mavg, up, pctB)
+colnames(res) <- c("dn", "mavg", "up", "pctB")
+reclass(res, HLC)
+}
+
+
