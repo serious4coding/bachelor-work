@@ -1,0 +1,37 @@
+#Random Walk Index (Manuell)
+
+SP500 <- read.table("~/Dropbox/Uni/BachelorArbeit/Data/SP500.csv", sep = ";", header = TRUE)
+DAX <- read.table("~/Dropbox/Uni/BachelorArbeit/Data/DAX.csv", sep = ";", header = TRUE)
+NIKKEI <- read.table("~/Dropbox/Uni/BachelorArbeit/Data/NIKKEI225.csv", sep = ";", header = TRUE)
+
+index <- xts(DAX[,3:5], order.by=as.Date(DAX[,1]))
+
+
+
+AverageTrueRange <- function(HLC, n = 14, maType, ...)
+{
+  HLC <- try.xts(HLC, error = as.matrix)
+  if (is.xts(HLC)) {
+    closeLag <- lag.xts(HLC[, 3])
+  }
+  else {
+    closeLag <- c(NA, HLC[-NROW(HLC), 3])
+  }
+  trueHigh <- pmax(HLC[, 1], closeLag, na.rm = FALSE)
+  trueLow <- pmin(HLC[, 2], closeLag, na.rm = FALSE)
+  tr <- trueHigh - trueLow
+  maArgs <- list(n = n, ...)
+  if (missing(maType)) {
+    maType <- "EMA"
+    maArgs$wilder <- TRUE
+  }
+  atr <- do.call(maType, c(list(tr), maArgs))
+  result <- cbind(tr, atr, trueHigh, trueLow)
+  colnames(result) <- c("tr", "atr", "trueHigh", "trueLow")
+  reclass(result, HLC)
+}
+
+atr <- AverageTrueRange(index, n=14, maType = "EMA")
+
+
+RWIHigh = (index[,])
