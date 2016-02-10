@@ -1,0 +1,45 @@
+#RSI (manuell)
+
+SP500 <- read.table("~/Dropbox/Uni/BachelorArbeit/Data/SP500.csv", sep = ";", header = TRUE)
+DAX <- read.table("~/Dropbox/Uni/BachelorArbeit/Data/DAX.csv", sep = ";", header = TRUE)
+NIKKEI <- read.table("~/Dropbox/Uni/BachelorArbeit/Data/NIKKEI225.csv", sep = ";", header = TRUE)
+
+index <- xts(DAX[,6], order.by=as.Date(DAX[,1]))
+  
+RSI <- function (price, n = 14, maType, ...)
+  
+{
+  price <- try.xts(price, error = as.matrix)
+  up <- momentum(price, n = 1, na.pad = TRUE)
+  which.dn <- which(up < 0)
+  dn <- up * 0
+  dn[which.dn] <- -up[which.dn]
+  up[which.dn] <- 0
+  maArgs <- list(n = n, ...)
+  if (missing(maType)) {
+    maType <- "EMA"
+    maArgs$wilder <- TRUE
+  }
+  if (is.list(maType)) {
+    maTypeInfo <- sapply(maType, is.list)
+    if (!(all(maTypeInfo) && length(maTypeInfo) == 2)) {
+      stop("If 'maType' is a list, you must specify\n ", 
+           "*two* MAs (see Examples section of ?RSI)")
+    }
+    for (i in 1:length(maType)) {
+      if (!is.null(formals(maType[[i]])$n) && is.null(maType[[i]]$n)) {
+        maType[[i]]$n <- n
+      }
+      mavgUp <- do.call(maType[[1]][[1]], c(list(up), maType[[1]][-1]))
+      mavgDn <- do.call(maType[[2]][[1]], c(list(dn), maType[[2]][-1]))
+    }
+  }
+  else {
+    mavgUp <- do.call(maType, c(list(up), maArgs))
+    mavgDn <- do.call(maType, c(list(dn), maArgs))
+  }
+  rsi <- 100 * mavgUp/(mavgUp + mavgDn)
+  reclass(rsi, price)
+}
+
+rsi <-RSI(index)
