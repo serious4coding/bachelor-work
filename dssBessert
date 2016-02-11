@@ -1,10 +1,6 @@
 #Doppelte geglättete Stochastik nach Bessert
 
-SP500 <- read.table("~/Dropbox/Uni/BachelorArbeit/Data/SP500.csv", sep = ";", header = TRUE)
-DAX <- read.table("~/Dropbox/Uni/BachelorArbeit/Data/DAX.csv", sep = ";", header = TRUE)
-NIKKEI <- read.table("~/Dropbox/Uni/BachelorArbeit/Data/NIKKEI225.csv", sep = ";", header = TRUE)
-
-index <- xts(DAX[,3:5], order.by=as.Date(DAX[,1]))
+#Funktion erstellen mit welcher der Indikator berechnet wird
 
 Stochastik <- function (HLC, nFastK = 14, nFastD = 3, nSlowD = 3, maType, bounded = TRUE, 
                    smooth = 1, ...)
@@ -70,7 +66,21 @@ Stochastik <- function (HLC, nFastK = 14, nFastD = 3, nSlowD = 3, maType, bounde
   reclass(result, HLC)
 }
 
+#Einspielen der Kursdaten der verschiedene Indizes
+
+SP500 <- read.table("~/Dropbox/Uni/BachelorArbeit/Data/SP500.csv", sep = ";", header = TRUE)
+DAX <- read.table("~/Dropbox/Uni/BachelorArbeit/Data/DAX.csv", sep = ";", header = TRUE)
+NIKKEI <- read.table("~/Dropbox/Uni/BachelorArbeit/Data/NIKKEI225.csv", sep = ";", header = TRUE)
+
+#Zusammenfassen der relevanten Daten in eine neue Tabelle
+
+index <- xts(DAX[,3:5], order.by=as.Date(DAX[,1]))
+
+#Berechnung der ersten Stochastik
+
 temp <- Stochastik(index, maType = "SMA")
+
+#Erneutes berechnung mit den daten der ersten Stochastik
 
 DSSBessert <-Stochastik(temp, maType = "SMA")
 
