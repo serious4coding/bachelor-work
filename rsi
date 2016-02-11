@@ -1,11 +1,7 @@
 #RSI (manuell)
 
-SP500 <- read.table("~/Dropbox/Uni/BachelorArbeit/Data/SP500.csv", sep = ";", header = TRUE)
-DAX <- read.table("~/Dropbox/Uni/BachelorArbeit/Data/DAX.csv", sep = ";", header = TRUE)
-NIKKEI <- read.table("~/Dropbox/Uni/BachelorArbeit/Data/NIKKEI225.csv", sep = ";", header = TRUE)
+#Funktion erstellen mit welcher der Indikator berechnet wird
 
-index <- xts(DAX[,6], order.by=as.Date(DAX[,1]))
-  
 RSI <- function (price, n = 14, maType, ...)
   
 {
@@ -41,5 +37,17 @@ RSI <- function (price, n = 14, maType, ...)
   rsi <- 100 * mavgUp/(mavgUp + mavgDn)
   reclass(rsi, price)
 }
+
+#Einspielen der Kursdaten der verschiedene Indizes
+
+SP500 <- read.table("~/Dropbox/Uni/BachelorArbeit/Data/SP500.csv", sep = ";", header = TRUE)
+DAX <- read.table("~/Dropbox/Uni/BachelorArbeit/Data/DAX.csv", sep = ";", header = TRUE)
+NIKKEI <- read.table("~/Dropbox/Uni/BachelorArbeit/Data/NIKKEI225.csv", sep = ";", header = TRUE)
+
+Zusammenfassen der relevanten Daten in eine neue Tabelle
+
+index <- xts(DAX[,6], order.by=as.Date(DAX[,1]))
+  
+#Berechnung
 
 rsi <-RSI(index)
