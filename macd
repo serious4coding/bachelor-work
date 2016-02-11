@@ -1,14 +1,19 @@
 #MACD manuell berechnet
 
+#Einspielen der Kursdaten der verschiedene Indizes
+
 SP500 <- read.table("~/Dropbox/Uni/BachelorArbeit/Data/SP500.csv", sep = ";", header = TRUE)
 DAX <- read.table("~/Dropbox/Uni/BachelorArbeit/Data/DAX.csv", sep = ";", header = TRUE)
 NIKKEI <- read.table("~/Dropbox/Uni/BachelorArbeit/Data/NIKKEI225.csv", sep = ";", header = TRUE)
 
 index <- DAX
 
+#Bestimmen einiger Variablen für die Funktion
 x <- 12
 y <- 26
 z <- 9
+
+#Berechnung der einzelnen Bestandteile
 
 EMAx = EMA(index[,7], n = x)
 EMAy = EMA(index[,7], n = y)
