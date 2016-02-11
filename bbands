@@ -1,14 +1,6 @@
 #Bollinger Bänder (manuell)
 
-SP500 <- read.table("~/Dropbox/Uni/BachelorArbeit/Data/SP500.csv", sep = ";", header = TRUE)
-DAX <- read.table("~/Dropbox/Uni/BachelorArbeit/Data/DAX.csv", sep = ";", header = TRUE)
-NIKKEI <- read.table("~/Dropbox/Uni/BachelorArbeit/Data/NIKKEI225.csv", sep = ";", header = TRUE)
-
-index <- xts(DAX[,3:5], order.by=as.Date(DAX[,1]))
-
-n <- 20
-sd <- 2
-
+#Funktion erstellen mit welcher der Indikator berechnet wird
 
 BollingerBänder <- function(index, n = n, sd = sd) {
     HLC <- apply(index, 1, mean)
@@ -23,4 +15,21 @@ colnames(res) <- c("dn", "mavg", "up", "pctB")
 reclass(res, HLC)
 }
 
+#Einspielen der Kursdaten der verschiedene Indizes
 
+SP500 <- read.table("~/Dropbox/Uni/BachelorArbeit/Data/SP500.csv", sep = ";", header = TRUE)
+DAX <- read.table("~/Dropbox/Uni/BachelorArbeit/Data/DAX.csv", sep = ";", header = TRUE)
+NIKKEI <- read.table("~/Dropbox/Uni/BachelorArbeit/Data/NIKKEI225.csv", sep = ";", header = TRUE)
+
+#Zusammenfassen der relevanten Daten in eine neue Tabelle
+
+index <- xts(DAX[,3:5], order.by=as.Date(DAX[,1]))
+
+#Bestimmen einiger Variablen für die Funktion
+
+n <- 20
+sd <- 2
+
+#Berechnung
+
+outcome <- BollingerBänder(index)
